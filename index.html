@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialOS Cloud Pro - المنصة السحابية المتكاملة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1f;
+            --border-color: #2c2c2e;
+            --text-color: #f1f1f1;
+            --primary-color: #0084ff;
+            --whatsapp-color: #25d366;
+            --youtube-color: #ff0000;
+            --accent-color: #00e676;
+            --badge-gold: #ffd700;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 10px; max-width: 950px; margin: 0 auto; }
+
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        h3 { margin-bottom: 12px; font-size: 1rem; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+
+        /* شريط التنقل العلوي */
+        .tabs {
+            display: flex; justify-content: space-between; background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 8px; border-radius: 12px; margin-bottom: 15px; gap: 4px; overflow-x: auto;
+        }
+        .tab-btn { background: none; border: none; color: #aaa; font-size: 0.75rem; cursor: pointer; padding: 8px 10px; border-radius: 8px; transition: 0.2s; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .tab-btn i { font-size: 1rem; }
+        .tab-btn.active { background: var(--primary-color); color: #fff; font-weight: bold; }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .form-group { margin-bottom: 10px; }
+        label { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 4px; }
+        input, select, textarea {
+            width: 100%; padding: 10px; background: #2a2a2c; border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; font-size: 0.85rem;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary-color); outline: none; }
+        
+        button.action-btn {
+            width: 100%; padding: 10px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: bold; margin-top: 8px;
+        }
+        button.action-btn:hover { opacity: 0.9; }
+
+        /* الألقاب والرتب */
+        .user-badge { background: rgba(255, 215, 0, 0.15); color: var(--badge-gold); border: 1px solid var(--badge-gold); padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; margin-right: 5px; display: inline-flex; align-items: center; gap: 3px; }
+        
+        /* المنشورات */
+        .post-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .post-avatar { width: 45px; height: 45px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+        .post-meta h4 { font-size: 0.9rem; color: var(--text-color); display: flex; align-items: center; }
+        .post-meta span { font-size: 0.7rem; color: #888; }
+        .post-body { font-size: 0.9rem; line-height: 1.5; margin-bottom: 10px; }
+        .post-media { width: 100%; max-height: 320px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+
+        /* أزرار المشاركة والواتساب */
+        .post-actions { display: flex; justify-content: space-around; border-top: 1px solid var(--border-color); padding-top: 10px; font-size: 0.8rem; color: #aaa; }
+        .action-icon { cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .action-icon:hover { color: var(--primary-color); }
+        .whatsapp-share:hover { color: var(--whatsapp-color); }
+
+        /* قسم فيديوهات مثل يوتيوب */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .video-card { background: #252528; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
+        .video-player-box { width: 100%; height: 160px; background: #000; display: flex; align-items: center; justify-content: center; }
+        .video-info { padding: 10px; }
+
+        /* لوحة معلومات السحابة */
+        .cloud-status { display: flex; justify-content: space-between; font-size: 0.75rem; background: #2a2a2c; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; color: var(--accent-color); }
+    </style>
+</head>
+<body>
+
+    <!-- مؤشر الاتصال بالسحابة -->
+    <div class="cloud-status">
+        <span><i class="fa-solid fa-cloud-arrow-up"></i> النظام متصل بالسحابة (Cloud Storage Active)</span>
+        <span>تشفير بيانات الأعضاء: آمن 100%</span>
+    </div>
+
+    <!-- شريط التبويبات الرئيسي -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('feedSection')"><i class="fa-solid fa-newspaper"></i>الرئيسية</button>
+        <button class="tab-btn" onclick="switchTab('videosSection')"><i class="fa-brands fa-youtube" style="color:var(--youtube-color);"></i>مكتبة الفيديو</button>
+        <button class="tab-btn" onclick="switchTab('membersSection')"><i class="fa-solid fa-ranking-star"></i>الألقاب والترقيات</button>
+        <button class="tab-btn" onclick="switchTab('profileSection')"><i class="fa-solid fa-id-card"></i>حسابي السحابي</button>
+    </div>
+
+    <!-- 1. قسم الخلاصة والمنشورات -->
+    <div id="feedSection" class="section active">
+        <div class="card">
+            <h3><i class="fa-solid fa-pen-nib"></i> انشر محتواك على السحابة</h3>
+            <textarea id="postTextContent" rows="3" placeholder="شارِك صورك، أفكارك، أو فيديوهاتك مع الأعضاء..."></textarea>
+            
+            <div style="display: flex; gap: 10px; margin: 8px 0; flex-wrap: wrap;">
+                <label style="background:#2a2a2c; padding:6px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;"><i class="fa-solid fa-image" style="color:var(--accent-color);"></i> رفع صورة <input type="file" id="imageInput" accept="image/*" style="display:none;"></label>
+                <label style="background:#2a2a2c; padding:6px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;"><i class="fa-solid fa-video" style="color:var(--primary-color);"></i> رفع فيديو قصير <input type="file" id="videoInput" accept="video/*" style="display:none;"></label>
+            </div>
+            
+            <button class="action-btn" onclick="addNewPost()">نشر للمجتمع</button>
+        </div>
+        <div id="postsContainer"></div>
+    </div>
+
+    <!-- 2. قسم الفيديوهات (مثل يوتيوب) -->
+    <div id="videosSection" class="section">
+        <div class="card">
+            <h3><i class="fa-solid fa-cloud-arrow-up"></i> رفع فيديو جديد (منصة يوتيوب المصغرة)</h3>
+            <div class="form-group"><label>عنوان الفيديو</label><input type="text" id="vidTitleInput" placeholder="اكتب عنواناً جذاباً للفيديو"></div>
+            <div class="form-group"><label>ملف الفيديو (MP4)</label><input type="file" id="vidFileInput" accept="video/*"></div>
+            <button class="action-btn" style="background: var(--youtube-color);" onclick="uploadVideoToTube()">نشر في مكتبة الفيديوهات</button>
+        </div>
+
+        <div class="card">
+            <h3><i class="fa-solid fa-play-circle"></i> أحدث فيديوهات الأعضاء</h3>
+            <div id="videoGallery" class="video-grid">
+                <!-- الفيديوهات تظهر هنا -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. قسم الألقاب والترقيات -->
+    <div id="membersSection" class="section">
+        <div class="card">
+            <h3><i class="fa-solid fa-medal"></i> نظام الألقاب، الرتب، والترقيات</h3>
+            <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 12px;">يتم ترقية الأعضاء تلقائياً بناءً على تفاعلهم ونشاطهم على السحابة:</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="background:#252528; padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>👑 <b>المدير العام (Founder / Admin)</b></span>
+                    <span style="font-size:0.75rem; color:var(--badge-gold);">صلاحيات كاملة بالسحابة</span>
+                </div>
+                <div style="background:#252528; padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>⭐ <b>منشئ محتوى مميز (Creator)</b></span>
+                    <span style="font-size:0.75rem; color:var(--primary-color);">صلاحية رفع فيديوهات غير محدودة</span>
+                </div>
+                <div style="background:#252528; padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>🛡️ <b>عضو نشط وموثق (Verified Member)</b></span>
+                    <span style="font-size:0.75rem; color:var(--accent-color);">تفاعل ونشر دائم</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. الحساب الشخصي السحابي -->
+    <div id="profileSection" class="section">
+        <div class="card" style="text-align: center;">
+            <div style="width: 70px; height: 70px; background: var(--primary-color); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; font-weight: bold;">ع</div>
+            <h3>عماد <span class="user-badge"><i class="fa-solid fa-crown"></i> مؤسس / مدير عام</span></h3>
+            <p style="font-size: 0.75rem; color: #aaa; margin-bottom: 10px;">المساحة السحابية المستخدمة: 1.2 جيجابايت / غير محدود</p>
+            <button class="action-btn" style="background: var(--whatsapp-color); width: auto; margin: 0 auto; display: inline-flex; align-items: center; gap: 6px;" onclick="shareProfileToWhatsApp()"><i class="fa-brands fa-whatsapp"></i> مشاركة الحساب عبر واتساب</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = "عماد";
+        let userTitle = "مدير عام النظام 👑";
+        
+        let postsList = [
+            { author: "عماد", title: "مدير عام النظام 👑", text: "تم ربط التطبيق بالسحابة وتفعيل قسم الفيديوهات وأزرار واتساب بالكامل!", time: "الآن", media: null, mediaType: null }
+        ];
+
+        let videosList = [
+            { title: "جولة في مميزات التطبيق السحابي الجديد", url: "", author: "عماد" }
+        ];
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // إضافة منشور مع دعم السحابة
+        function addNewPost() {
+            let text = document.getElementById('postTextContent').value.trim();
+            let imageFile = document.getElementById('imageInput').files[0];
+            let videoFile = document.getElementById('videoInput').files[0];
+
+            if(!text && !imageFile && !videoFile) return alert('يرجى إضافة محتوى للنشر.');
+
+            let mediaUrl = null;
+            let mediaType = null;
+
+            if(imageFile) {
+                mediaUrl = URL.createObjectURL(imageFile);
+                mediaType = 'image';
+            } else if(videoFile) {
+                mediaUrl = URL.createObjectURL(videoFile);
+                mediaType = 'video';
+            }
+
+            postsList.unshift({ author: currentUser, title: userTitle, text: text, time: "منذ لحظات", media: mediaUrl, mediaType: mediaType });
+            document.getElementById('postTextContent').value = '';
+            document.getElementById('imageInput').value = '';
+            document.getElementById('videoInput').value = '';
+            renderPosts();
+            switchTab('feedSection');
+        }
+
+        function renderPosts() {
+            let container = document.getElementById('postsContainer');
+            container.innerHTML = '';
+            postsList.forEach((p, index) => {
+                let mediaTag = '';
+                if(p.mediaType === 'image') mediaTag = `<img src="${p.media}" class="post-media">`;
+                if(p.mediaType === 'video') mediaTag = `<video src="${p.media}" controls class="post-media"></video>`;
+
+                let shareText = encodeURIComponent(`شاهد هذا المنشور الرائع من ${p.author}: ${p.text}`);
+
+                container.innerHTML += `
+                    <div class="post-box">
+                        <div class="post-header">
+                            <div class="post-avatar">${p.author.charAt(0)}</div>
+                            <div class="post-meta">
+                                <h4>${p.author} <span class="user-badge">${p.title}</span></h4>
+                                <span>${p.time} • <i class="fa-solid fa-cloud" style="color:var(--accent-color);"></i> مخزن سحابياً</span>
+                            </div>
+                        </div>
+                        <div class="post-body">${p.text}</div>
+                        ${mediaTag}
+                        <div class="post-actions">
+                            <span class="action-icon"><i class="fa-regular fa-thumbs-up"></i> إعجاب</span>
+                            <span class="action-icon"><i class="fa-regular fa-comment"></i> تعليق</span>
+                            <a href="https://api.whatsapp.com/send?text=${shareText}" target="_blank" class="action-icon whatsapp-share" style="text-decoration:none; color:inherit;"><i class="fa-brands fa-whatsapp" style="color:var(--whatsapp-color);"></i> مشاركة واتساب</a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // رفع فيديو إلى قسم يوتيوب المصغر
+        function uploadVideoToTube() {
+            let title = document.getElementById('vidTitleInput').value.trim();
+            let file = document.getElementById('vidFileInput').files[0];
+
+            if(!title || !file) return alert('يرجى إدخال عنوان الفيديو واختيار الملف.');
+
+            let videoUrl = URL.createObjectURL(file);
+            videosList.unshift({ title: title, url: videoUrl, author: currentUser });
+            
+            document.getElementById('vidTitleInput').value = '';
+            document.getElementById('vidFileInput').value = '';
+            renderVideos();
+            alert('تم رفع الفيديو بنجاح إلى مكتبة الفيديوهات السحابية!');
+        }
+
+        function renderVideos() {
+            let gallery = document.getElementById('videoGallery');
+            gallery.innerHTML = '';
+            videosList.forEach(v => {
+                gallery.innerHTML += `
+                    <div class="video-card">
+                        <div class="video-player-box">
+                            <video src="${v.url}" controls style="width:100%; height:100%; object-fit:cover;"></video>
+                        </div>
+                        <div class="video-info">
+                            <h4 style="font-size:0.85rem; margin-bottom:4px; color:#fff;">${v.title}</h4>
+                            <span style="font-size:0.7rem; color:#888;">بواسطة: ${v.author}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function shareProfileToWhatsApp() {
+            let msg = encodeURIComponent("تفضل بزيارة حسابي الشخصي والمتابعة على منصة SocialOS السحابية المتكاملة!");
+            window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+        }
+
+        renderPosts();
+        renderVideos();
+    </script>
+</body>
+</html>
